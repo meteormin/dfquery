@@ -1,5 +1,4 @@
 from pandas import DataFrame
-from dfquery.attr import Attributes
 
 
 class Parser:
