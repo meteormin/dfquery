@@ -38,9 +38,8 @@ class Parser:
                 else:
                     operator = f"{v}"
             elif k == 'value':
-                if isinstance(v, int):
-                    value = f"{str(v)}"
-                else:
+                value = str(v)
+                if not value.isnumeric():
                     value = f"'{str(v)}'"
 
         if column is None or operator is None or value is None:
@@ -58,19 +57,21 @@ class Parser:
 
     @staticmethod
     def parse_wild_card(value: str):
+        if '*' not in value:
+            return
+
+        value = value.replace("'", '')
         index = value.find('*')
 
         if index == -1:
             return
 
         if index == 0 and value[len(value) - 1] != '*':
-            func = 'str.startswith'
-        elif index == len(value) - 1:
             func = 'str.endswith'
-        elif index == 0 and value[len(value) - 1] == '*':
-            func = 'str.contains'
+        elif index == 0 and index == len(value) - 1:
+            func = 'str.startswith'
         else:
-            return
+            func = 'str.contains'
 
         value = value.replace('*', '')
 

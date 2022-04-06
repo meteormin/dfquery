@@ -8,6 +8,13 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 
 class DfQueryTest(unittest.TestCase):
 
+    def test_str(self):
+        abc = "*abc"
+
+        index = abc.find('*')
+        self.assertEqual(index, 0)
+
+
     def test_query(self):
         test_data = {}
         test_query = {}

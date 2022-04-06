@@ -4,9 +4,9 @@
             "select": ["name"],
             "where": [
                 {
-                    "key": "id",
-                    "operator": "==",
-                    "value": 1
+                    "key": "name",
+                    "operator": "like",
+                    "value": "*abc"
                 }
             ]
         }
