@@ -1,0 +1,26 @@
+{
+    "table_1": {
+        "name": {
+            "select": ["name"],
+            "where": [
+                {
+                    "key": "id",
+                    "operator": "==",
+                    "value": 1
+                }
+            ]
+        }
+    },
+    "table_2": {
+        "name": {
+            "select": ["name"],
+            "where": [
+                {
+                    "key": "id",
+                    "operator": "==",
+                    "value": 1
+                }
+            ]
+        }
+    }
+}
