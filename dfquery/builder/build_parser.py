@@ -15,8 +15,8 @@ class Parser:
     def df(self, df: DataFrame):
         self._df = df
 
-    def select(self, select: list) -> list:
-        selected = []
+    def select(self, select: list) -> dict:
+        selected = {}
         for df_idx, row in self._df.iterrows():
             selected_row = {}
             if '*' in select:
@@ -24,7 +24,7 @@ class Parser:
             else:
                 for s in select:
                     selected_row.update({s: row[s]})
-            selected.append(selected_row)
+            selected.update({df_idx: selected_row})
         return selected
 
     def where(self, where: dict) -> DataFrame:

@@ -1,26 +1,36 @@
 {
-    "table_1": {
-        "name": {
-            "select": ["id", "name"],
-            "where": [
-                {
-                    "key": "name",
-                    "operator": "like",
-                    "value": "*abc"
-                }
-            ]
+  "table_1": {
+    "name": {
+      "select": [
+        "id",
+        "name"
+      ],
+      "where": [
+        {
+          "key": "name",
+          "operator": "like",
+          "value": "*abc"
         }
-    },
-    "table_2": {
-        "name": {
-            "select": ["*"],
-            "where": [
-                {
-                    "key": "name",
-                    "operator": "like",
-                    "value": "*abc*"
-                }
-            ]
-        }
+      ]
     }
+  },
+  "table_2": {
+    "name": {
+      "select": [
+        "*"
+      ],
+      "where": [
+        {
+          "key": "name",
+          "operator": "like",
+          "value": "*abc*"
+        },
+        {
+          "key": "cols",
+          "operator": ">=",
+          "value": 1000
+        }
+      ]
+    }
+  }
 }
