@@ -39,9 +39,7 @@ class Builder:
             where = attr.get_where()
             for w in where:
                 self._parser.where(w)
-                selected = None
-                for s in select:
-                    selected = self._parser.select(s)
+                selected = self._parser.select(select)
                 result[attr.name].extend(selected)
 
         return {

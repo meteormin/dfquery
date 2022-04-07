@@ -6,7 +6,7 @@ Pandas DataFrame 조회를 양식화된 JSON(내부에선 딕셔너리 객체)�
 
 ## 사용법
 
-### install
+### 설치
 
 ```
 git clone https://github.com/miniyus/dfquery
@@ -46,20 +46,20 @@ import pandas
 import dfquery
 
 """
-데이터 프레임으로 변환 가능한 객체
+data: 데이터 프레임으로 변환 가능한 객체
 """
 data = pandas.DataFrame()
 dfquery.make('table_name', data)
 
 """
-딕셔너리의 경우, 데이터 프레임의 from_dict 메서드를 사용하기 때문에
+data: 딕셔너리의 경우, 데이터 프레임의 from_dict 메서드를 사용하기 때문에
 orient 파라미터가 존재합니다. 딕셔너리 구조에 맞게 사용하세요.
 """
 data = {}
 dfquery.make('table_name', data)
 
 """
-list[dict] 형태의 records 형식은 from_records 메서드를 사용하여 dataframe으로 변환합니다.
+data: list[dict] 형태의 records 형식은 from_records 메서드를 사용하여 dataframe으로 변환합니다.
 """
 data = [{}]
 dfquery.make('table_name', data)
@@ -125,6 +125,7 @@ query = dfquery.batch({
 **문법**
 
 - select: 가져올 컬럼명 리스트
+    - ```"*"```를 입력한 경우, 모든 컬럼을 가져오며, ```"*"```의 순서와 상관 없이 select 리스트에 포함 되어 있는 경우 모든 컬럼을 조회합니다.
 - where:
     - key: 조건에 사용할 컬럼명
         - operator: 비교 조건, python에서 사용하는 기본 비교 연산자 사용 가능
@@ -134,8 +135,9 @@ query = dfquery.batch({
                 - ```"ABC*"```: ABC(으)로 시작하는 값 찾기
           ```json
           {
+            "key": "column_name",
             "operator": "like",
-            "value": "*ABCV*"    
+            "value": "*ABC*"    
           }
           ```
     - where절도 리스트이기 때문에 여러개의 조건을 포함할 수 있으나 OR 조건처럼 작동한다.

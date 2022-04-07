@@ -15,11 +15,16 @@ class Parser:
     def df(self, df: DataFrame):
         self._df = df
 
-    def select(self, select: str) -> list:
+    def select(self, select: list) -> list:
         selected = []
         for df_idx, row in self._df.iterrows():
-            selected.append(row[select])
-
+            selected_row = {}
+            if '*' in select:
+                selected_row.update(row.to_dict())
+            else:
+                for s in select:
+                    selected_row.update({s: row[s]})
+            selected.append(selected_row)
         return selected
 
     def where(self, where: dict) -> DataFrame:
