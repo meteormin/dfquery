@@ -4,6 +4,10 @@ Pandas DataFrame 조회를 양식화된 JSON(내부에선 딕셔너리 객체)�
 
 ## 목적
 
+Pandas DataFrame 조회를 별도의 코드 수정없이 JSON과 같이 ```name: value``` 형태의 자료구조를 활용하여 원하는 값을 조회하고자 했습니다.
+
+Python에서 딕셔너리로 변환 가능한 자료구조는 모두 가능 합니다.
+
 ## 사용법
 
 ### 설치
@@ -142,3 +146,87 @@ query = dfquery.batch({
           ```
     - where절도 리스트이기 때문에 여러개의 조건을 포함할 수 있으나 OR 조건처럼 작동한다.
 
+### dfquery.table()
+
+딕셔너리가 아닌 런타임 코드 작성
+
+```python
+import dfquery
+import json
+
+# Generator 객체로 넘기기
+table_name = 'table_1'
+file = open('table_file_path')
+json_dict = json.load(file)
+
+query = dfquery.make(table_name, json_dict.get('table_1'))
+
+tbl = dfquery.table(table_name)
+gen = tbl.name('table_test').select('name').where({
+    "key": "name",
+    "operator": "like",
+    "value": "*abc"
+})
+
+query.query(gen)
+results = query.build()
+print(results)
+
+# Table 객체로 넘기는 방법
+table_name = 'table_1'
+file = open('table_file_path')
+json_dict = json.load(file)
+query = dfquery.batch(json_dict)
+
+tbl = dfquery.table(table_name)
+tbl.name('table_test').select('name').where({
+    "key": "name",
+    "operator": "like",
+    "value": "*abc"
+})
+
+query.query(tbl)
+results = query.build()
+print(results)
+```
+
+### dfquery.tables()
+
+여러개의 테이블을 사용할 경우 런타임 코드 작성
+
+```python
+import dfquery
+import json
+
+# Generator 객체로 넘기기
+
+file = open('table_file_path')
+json_dict = json.load(file)
+query = dfquery.batch(json_dict)
+
+tables = dfquery.tables()
+table_1 = dfquery.table('table_1')
+table_1.name('test_name').select('name').where({
+    "key": "name",
+    "operator": "=",
+    "value": "dfquery"
+})
+tables.append(table_1)
+
+table_2 = dfquery.table('table_2')
+table_1.name('test_name').select('name').where({
+    "key": "name",
+    "operator": "!=",
+    "value": "dfquery"
+})
+
+tables.append(table_2)
+
+results = query.query(tables).build()
+
+print(results)
+```
+
+### 테스트 코드
+
+[tests](./tests)

@@ -3,9 +3,10 @@ from typing import Union, List, Dict
 from dfquery.attr import Attributes, AttrQuery
 from dfquery.core import Core, Collection
 import dfquery.builder
+from dfquery.generator import Table, Generator, Tables
 
 
-def make(table_name: str, data: Union[DataFrame, dict, list] = None, orient: str = None) -> Core:
+def make(table_name: Union[str], data: Union[DataFrame, dict, list] = None, orient: str = None) -> Core:
     core_obj = Core(builder.make(), Attributes, AttrQuery)
     if isinstance(data, DataFrame):
         core_obj.from_df(table_name, data)
@@ -20,3 +21,11 @@ def make(table_name: str, data: Union[DataFrame, dict, list] = None, orient: str
 def batch(data: Dict[str, Union[DataFrame, dict, List[dict]]], orient=None) -> Collection:
     collection = Collection(builder=builder.make(), attributes=Attributes, attr=AttrQuery)
     return collection.make_children(data, orient)
+
+
+def table(table_name: str) -> Table:
+    return Table(table_name, Generator)
+
+
+def tables() -> Tables:
+    return Tables()

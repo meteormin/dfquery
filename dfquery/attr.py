@@ -3,11 +3,8 @@ from typing import List
 
 
 class Attributes(AbsAttributes):
-    _table_name: str
-    _attributes: List[AbsAttrQuery]
-
     def __init__(self, table_name: str, attributes: List[AbsAttrQuery]):
-        super().__init__(table_name, attributes)
+        super(Attributes, self).__init__(table_name, attributes)
 
     @property
     def table_name(self) -> str:
@@ -28,13 +25,8 @@ class Attributes(AbsAttributes):
 
 
 class AttrQuery(AbsAttrQuery):
-    _index: int
-    _name: str
-    _select: list = []
-    _where: list = []
-
     def __init__(self, index: int, name: str, attr_dict: dict = None):
-        super().__init__(index, name, attr_dict)
+        super(AttrQuery, self).__init__(index, name, attr_dict)
 
     @property
     def name(self):

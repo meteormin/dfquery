@@ -1,7 +1,10 @@
-from dfquery.abstracts import Core as Abstract, DfQuery
-from dfquery.abstracts import Attributes as AbsAttributes, AttrQuery as AbsAttrQuery
+import pandas
+
+from dfquery.abstracts import Core as Abstract, DfQuery, Attributes as AbsAttributes, AttrQuery as AbsAttrQuery, \
+    DictAble
 from dfquery.attr import Attributes
 from dfquery.builder import Builder
+from dfquery.generator import Generator, Table, Tables
 from pandas import DataFrame
 from typing import Type, List, Dict, Union
 import copy
@@ -10,19 +13,19 @@ import copy
 class Core(Abstract):
     _attributes_class: Type[AbsAttributes]
     _attr_class: Type[AbsAttrQuery]
-    _builder: Builder
-    _attributes: Attributes
-    _table_name: str
-    _df: DataFrame
 
     def __init__(self,
                  builder: Builder,
                  attributes: Type[AbsAttributes],
                  attr: Type[AbsAttrQuery]
                  ):
-        self._builder = builder
-        self._attributes_class = attributes
-        self._attr_class = attr
+        self._builder: Builder = builder
+        self._attributes_class: Type[AbsAttributes] = attributes
+        self._attr_class: Type[AbsAttrQuery] = attr
+
+        self._table_name: str = ''
+        self._df: DataFrame = pandas.DataFrame()
+        self._attributes = self._attributes_class(self._table_name, [])
 
     def from_dict(self, table_name: str, df_dict: dict, orient: str = None) -> 'Core':
         self._table_name = table_name
@@ -53,8 +56,12 @@ class Core(Abstract):
     def get_query(self) -> Attributes:
         return self._attributes
 
-    def query(self, query_dict: dict) -> 'Core':
+    def query(self, query_dict: Union[dict, Generator]) -> 'Core':
         attributes = []
+
+        if isinstance(query_dict, Generator):
+            query_dict = query_dict.to_dict()
+
         for name, value in query_dict.items():
             if isinstance(name, str) and isinstance(value, dict):
                 attributes.append(self._attr_class(len(attributes), name, value))
@@ -70,19 +77,18 @@ class Core(Abstract):
 
 
 class Collection(DfQuery):
-    _children: List[Core] = []
     _attributes_class: Type[AbsAttributes]
     _attr_class: Type[AbsAttrQuery]
-    _builder: Builder
 
     def __init__(self,
                  builder: Builder,
                  attributes: Type[AbsAttributes],
                  attr: Type[AbsAttrQuery]
                  ):
-        self._builder = builder
+        self._builder: Builder = builder
         self._attributes_class = attributes
         self._attr_class = attr
+        self._children: List[Core] = []
 
     def make_children(self, data: Dict[str, Union[DataFrame, dict, List[dict]]], orient=None):
         self._children = []
@@ -113,7 +119,13 @@ class Collection(DfQuery):
         f_ls = list(f)
         return f_ls[0] if f_ls else None
 
-    def query(self, query_dict: Dict[str, dict], table_name: str = None):
+    def query(self, query_dict: Union[Dict[str, dict], DictAble], table_name: str = None):
+        if isinstance(query_dict, DictAble):
+            if isinstance(query_dict, Generator):
+                query_dict = {query_dict.table: query_dict.to_dict()}
+            else:
+                query_dict = query_dict.to_dict()
+
         if table_name is not None:
             child = self.get_by_table(table_name)
             return child.query(query_dict[table_name])

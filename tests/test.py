@@ -42,6 +42,35 @@ class DfQueryTest(unittest.TestCase):
 
         self.assertEqual(results, {'table_1': {'name': ['aabc']}, 'table_2': {'name': ['abcdefg']}})
 
+    def test_table(self):
+        test_data, test_query = self.get_data().values()
+        table_name = 'table_1'
+        query = dfquery.make(table_name, test_data.get('table_1'))
+
+        tbl = dfquery.table(table_name)
+        gen = tbl.name('table_test').select('name').where({
+            "key": "name",
+            "operator": "like",
+            "value": "*abc"
+        })
+
+        query.query(gen)
+        results = query.build()
+
+        self.assertEqual(results, {'table_1': {'name': ['aabc']}, 'table_2': {'name': ['abcdefg']}})
+
+    def test_tables(self):
+        test_data, test_query = self.get_data().values()
+        tables = dfquery.tables()
+        for name, query in test_query.items():
+            tbl = dfquery.table(name)
+            for n, q in query.items():
+                tbl.name(n).select(q['select']).where(q['where'])
+
+            tables.append(tbl)
+
+        self.assertEqual(tables.to_dict(), test_query)
+
 
 if __name__ == '__main__':
     unittest.main()

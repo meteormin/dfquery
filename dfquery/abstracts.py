@@ -4,17 +4,12 @@ from typing import List
 
 
 class AttrQuery(ABC):
-    _index: int
-    _name: str
-    _select: list = []
-    _where: list = []
-
     def __init__(self, index: int, name: str, attr_dict: dict = None):
-        self._index = index
-        self._name = name
+        self._index: int = index
+        self._name: str = name
         if attr_dict is not None:
-            self._select = attr_dict['select']
-            self._where = attr_dict['where']
+            self._select: list = attr_dict['select']
+            self._where: List[dict] = attr_dict['where']
 
     @property
     def name(self) -> str:
@@ -38,12 +33,10 @@ class AttrQuery(ABC):
 
 
 class Attributes(ABC):
-    _table_name: str
-    _attributes: List[AttrQuery]
 
     def __init__(self, table_name: str, attributes: List[AttrQuery]):
-        self._table_name = table_name
-        self._attributes = attributes
+        self._table_name: str = table_name
+        self._attributes: List[AttrQuery] = attributes
 
     def append(self, attr: AttrQuery):
         self._attributes.append(attr)
@@ -83,8 +76,6 @@ class DfQuery(ABC):
 
 
 class Core(DfQuery):
-    _table_name: str
-    _df: DataFrame
 
     @abstractmethod
     def from_dict(self, table_name: str, df_dict: dict, orient: str) -> 'Core':
@@ -98,9 +89,9 @@ class Core(DfQuery):
     def from_df(self, table_name: str, df: DataFrame) -> 'Core':
         pass
 
-    @property
+    @abstractmethod
     def df(self) -> DataFrame:
-        return self._df
+        pass
 
     @abstractmethod
     def table_name(self) -> str:
@@ -112,4 +103,10 @@ class Core(DfQuery):
 
     @abstractmethod
     def query(self, query_dict: dict) -> 'Core':
+        pass
+
+
+class DictAble(ABC):
+    @abstractmethod
+    def to_dict(self):
         pass
