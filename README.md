@@ -1,4 +1,6 @@
 # DfQuery
+<img alt="Version" src="https://img.shields.io/badge/version-v1.0.0-blue.svg?cacheSeconds=2592000" />
+<img src="https://img.shields.io/badge/Python3.8-3776AB?logo=python&logoColor=white" />
 
 Pandas DataFrame 조회를 양식화된 JSON(내부에선 딕셔너리 객체)으로 원하는 값을 가져올 수 있습니다.
 
