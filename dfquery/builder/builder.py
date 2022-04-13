@@ -4,22 +4,15 @@ from dfquery.abstracts import Attributes
 
 
 class Builder:
-    _df: DataFrame
-    _parser: Parser
-
     def __init__(self, parser: Parser):
-        self._parser = parser
-
-        if self._parser.df is not None:
-            self._df = self._parser.df
+        self._parser: Parser = parser
 
     @property
     def df(self):
-        return self._df
+        return self._parser.df
 
     @df.setter
     def df(self, df: DataFrame):
-        self._df = df
         self._parser.df = df
 
     @property

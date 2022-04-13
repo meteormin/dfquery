@@ -7,7 +7,7 @@ from dfquery.generator import Table, Generator, Tables
 
 
 def make(table_name: Union[str], data: Union[DataFrame, dict, list] = None, orient: str = None) -> Core:
-    core_obj = Core(builder.make(), Attributes, AttrQuery)
+    core_obj = Core(builder.make(), Attributes(table_name))
     if isinstance(data, DataFrame):
         core_obj.from_df(table_name, data)
     elif isinstance(data, dict):
@@ -19,7 +19,7 @@ def make(table_name: Union[str], data: Union[DataFrame, dict, list] = None, orie
 
 
 def batch(data: Dict[str, Union[DataFrame, dict, List[dict]]], orient=None) -> Collection:
-    collection = Collection(builder=builder.make(), attributes=Attributes, attr=AttrQuery)
+    collection = Collection(builder=builder.make(), attributes=Attributes)
     return collection.make_children(data, orient)
 
 

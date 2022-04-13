@@ -1,6 +1,6 @@
 from typing import List, Dict, Union, Type
 from collections import UserList
-from abstracts import DictAble
+from dfquery.abstracts import DictAble
 
 
 class Generator(DictAble):

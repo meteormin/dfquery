@@ -34,9 +34,13 @@ class AttrQuery(ABC):
 
 class Attributes(ABC):
 
-    def __init__(self, table_name: str, attributes: List[AttrQuery]):
+    def __init__(self, table_name: str, attributes: List[AttrQuery] = None):
         self._table_name: str = table_name
-        self._attributes: List[AttrQuery] = attributes
+
+        if attributes is None:
+            self._attributes: List[AttrQuery] = []
+        else:
+            self._attributes: List[AttrQuery] = attributes
 
     def append(self, attr: AttrQuery):
         self._attributes.append(attr)
@@ -47,9 +51,20 @@ class Attributes(ABC):
     def all(self) -> List[AttrQuery]:
         return self._attributes
 
+    def extend(self, attrs: List[AttrQuery]):
+        self._attributes.extend(attrs)
+
     @property
     def table_name(self) -> str:
         return self._table_name
+
+    @table_name.setter
+    def table_name(self, table_name: str):
+        self._table_name = table_name
+
+    @abstractmethod
+    def append_child(self, index: int, name: str, attr_dict: dict = None):
+        pass
 
     @abstractmethod
     def get_by_index(self, idx: int):

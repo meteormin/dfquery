@@ -3,7 +3,8 @@ from typing import List
 
 
 class Attributes(AbsAttributes):
-    def __init__(self, table_name: str, attributes: List[AbsAttrQuery]):
+
+    def __init__(self, table_name: str, attributes: List[AbsAttrQuery] = None):
         super(Attributes, self).__init__(table_name, attributes)
 
     @property
@@ -22,6 +23,9 @@ class Attributes(AbsAttributes):
         f = filter(lambda x: name == x.get_name(), self._attributes)
         f_ls = list(f)
         return f_ls[0] if f_ls else None
+
+    def append_child(self, index: int, name: str, attr_dict: dict = None):
+        self.append(AttrQuery(index, name, attr_dict))
 
 
 class AttrQuery(AbsAttrQuery):
