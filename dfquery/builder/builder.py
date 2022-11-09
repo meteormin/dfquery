@@ -27,13 +27,13 @@ class Builder:
         result = {}
 
         for attr in attributes.all():
-            result[attr.name] = {}
+            result[attr.name] = []
             select = attr.get_select()
             where = attr.get_where()
             for w in where:
                 self._parser.where(w)
                 selected = self._parser.select(select)
-                result[attr.name].update(selected)
+                result[attr.name].extend(selected)
 
         return {
             attributes.table_name: result

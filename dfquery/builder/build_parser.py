@@ -15,8 +15,8 @@ class Parser:
     def df(self, df: DataFrame):
         self._df = df
 
-    def select(self, select: list) -> dict:
-        selected = {}
+    def select(self, select: list) -> list:
+        selected = []
         for df_idx, row in self._df.iterrows():
             selected_row = {}
             if '*' in select:
@@ -24,7 +24,8 @@ class Parser:
             else:
                 for s in select:
                     selected_row.update({s: row[s]})
-            selected.update({df_idx: selected_row})
+            # selected.update({df_idx: selected_row})
+            selected.append(selected_row)
         return selected
 
     def where(self, where: dict) -> DataFrame:
@@ -33,24 +34,25 @@ class Parser:
         operator = None
         value = None
 
-        for k, v in where.items():
-            if k == 'key':
-                column = f"`{v}`"
-            elif k == 'operator':
-                if v == 'like':
-                    operator = 'str'
-                else:
-                    operator = f"{v}"
-            elif k == 'value':
-                value = str(v)
-                if not value.isnumeric():
-                    value = f"'{str(v)}'"
+        if 'key' in where:
+            column = f"`{where['key']}`"
+
+        if 'operator' in where:
+            if where['operator'] == 'like':
+                operator = 'str'
+            else:
+                operator = f"{where['operator']}"
+
+        if 'value' in where:
+            value = str(where['value'])
+            if not value.isnumeric():
+                value = f"'{value}'"
 
         if column is None or operator is None or value is None:
-            return self._df
+            raise ValueError('where is not defined')
 
         if operator == 'str':
-            operator = self.parse_wild_card(value)
+            operator = self._parse_wild_card(value)
 
             str_query += column + operator
         else:
@@ -60,15 +62,12 @@ class Parser:
         return self._df
 
     @staticmethod
-    def parse_wild_card(value: str):
-        if '*' not in value:
-            return
+    def _parse_wild_card(value: str):
+        if not value:
+            raise ValueError('parse wild card value parameter is empty!')
 
         value = value.replace("'", '')
         index = value.find('*')
-
-        if index == -1:
-            return
 
         if index == 0 and value[len(value) - 1] != '*':
             func = 'str.endswith'

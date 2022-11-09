@@ -2,8 +2,7 @@
   "table_1": {
     "name": {
       "select": [
-        "id",
-        "name"
+        "id", "name"
       ],
       "where": [
         {
