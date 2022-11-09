@@ -8,6 +8,6 @@ setup(name='dfquery',
       url='https://github.com/miniyus/dfquery',
       license='MIT',
       python_requires='>=3.8',
-      install_requires=['pandas~=1.2.3'],
+      install_requires=['pandas~=1.5.0'],
       packages=find_packages()
       )
