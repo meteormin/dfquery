@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(name='dfquery',
-      version='0.0.1',
+      version='1.0.1',
       description='dfquery',
-      author='Yoo Seong-min',
+      author='miniyus',
       author_email='miniyu97@gmail.com',
       url='https://github.com/miniyus/dfquery',
       license='MIT',
