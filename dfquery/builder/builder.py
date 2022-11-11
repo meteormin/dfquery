@@ -32,8 +32,9 @@ class Builder:
             where = attr.get_where()
             for w in where:
                 self._parser.where(w)
-                selected = self._parser.select(select)
-                result[attr.name].extend(selected)
+
+            selected = self._parser.select(select)
+            result[attr.name].extend(selected)
 
         return {
             attributes.table_name: result
